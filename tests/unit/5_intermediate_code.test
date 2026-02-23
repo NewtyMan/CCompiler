@@ -1,0 +1,283 @@
+:testcase:
+:name: Array access with identifiers
+:flags: --intermediate --intermediate-print
+:input:
+int main(int argc, char **argv) {
+    int x[5];
+    int y = 1;
+
+    return x[y];
+}
+:input:
+:output:
+function main
+write y, 1 {size=4}
+t0 = read y {size=4}
+t1 = t0 * 4
+t0 = x + t1
+t1 = read t0 {size=4}
+return t1
+:output:
+:testcase:
+
+:testcase:
+:name: Array access with constants (optimization)
+:flags: --intermediate --intermediate-print
+:input:
+int main(int argc, char **argv) {
+    int x[5];
+    return x[2];
+}
+:input:
+:output:
+function main
+t0 = 2 * 4
+t1 = x + t0
+t0 = read t1 {size=4}
+return t0
+:output:
+:testcase:
+
+:testcase:
+:name: Array offset size calculation
+:flags: --intermediate --intermediate-print
+:input:
+int main(int argc, char **argv) {
+    char x[5];
+    return x[2];
+}
+:input:
+:output:
+function main
+t0 = x + 2
+t1 = read t0 {size=1}
+return t1
+:output:
+:testcase:
+
+:testcase:
+:name: Binary operations
+:flags: --intermediate --intermediate-print
+:input:
+int main(int argc, char **argv) {
+    int x = 0;
+    x = x + 1;
+    x = x / 2;
+    x = x % 2;
+    x += 1;
+    return x;
+}
+:input:
+:output:
+function main
+write x, 0 {size=4}
+t0 = read x {size=4}
+t1 = t0 + 1
+write x, t1 {size=4}
+t0 = read x {size=4}
+t1 = t0 / 2
+write x, t1 {size=4}
+t0 = read x {size=4}
+t1 = t0 % 2
+write x, t1 {size=4}
+t0 = read x {size=4}
+t1 = t0 + 1
+write x, t1 {size=4}
+t0 = read x {size=4}
+return t0
+:output:
+:testcase:
+
+:testcase:
+:name: Break statement
+:flags: --intermediate --intermediate-print
+:input:
+int main(int argc, char **argv) {
+    while (1) {
+        break;
+    }
+    return 0;
+}
+:input:
+:output:
+function main
+L0:
+if 1 == 0 goto L1
+goto L1
+goto L0
+L1:
+return 0
+:output:
+:testcase:
+
+:testcase:
+:name: Constants
+:flags: --intermediate --intermediate-print
+:input:
+int main(int argc, char **argv) {
+    char a = 'a';
+    char zero = '\0';
+    int b = 10;
+    int c = 0xFF;
+    int d = 0755;
+    int e = b;
+
+    return 0;
+}
+:input:
+:output:
+function main
+write a, 97 {size=1}
+write zero, 0 {size=1}
+write b, 10 {size=4}
+write c, 255 {size=4}
+write d, 493 {size=4}
+t0 = read b {size=4}
+write e, t0 {size=4}
+return 0
+:output:
+:testcase:
+
+:testcase:
+:name: Declarators
+:flags: --intermediate --intermediate-print
+:input:
+int main(int argc, char **argv) {
+    int a = 1, b = 0, c = a;
+    return 0;
+}
+:input:
+:output:
+function main
+write a, 1 {size=4}
+write b, 0 {size=4}
+t0 = read a {size=4}
+write c, t0 {size=4}
+return 0
+:output:
+:testcase:
+
+:testcase:
+:name: Do-while statement
+:flags: --intermediate --intermediate-print
+:input:
+int main(int argc, char **argv) {
+    int x = 0;
+    do {
+        x++;
+    } while (x < 5);
+
+    return x;
+}
+:input:
+:output:
+function main
+write x, 0 {size=4}
+L0:
+t0 = read x {size=4}
+t1 = t0 + 1
+write x, t1 {size=4}
+L1:
+t0 = read x {size=4}
+t1 = t0 < 5
+if t1 == 0 goto L2
+goto L0
+L2:
+t0 = read x {size=4}
+return t0
+:output:
+:testcase:
+
+:testcase:
+:name: For statement
+:flags: --intermediate --intermediate-print
+:input:
+int main(int argc, char **argv) {
+    int i;
+    for (i = 0; i < argc; i++) {
+        i += i;
+    }
+    return 0;
+}
+:input:
+:output:
+function main
+write i, 0 {size=4}
+L0:
+t0 = read argc {size=4}
+t1 = read i {size=4}
+t2 = t1 < t0
+if t2 == 0 goto L2
+t0 = read i {size=4}
+t1 = read i {size=4}
+t2 = t1 + t0
+write i, t2 {size=4}
+L1:
+t0 = read i {size=4}
+t1 = t0 + 1
+write i, t1 {size=4}
+goto L0
+L2:
+return 0
+:output:
+:testcase:
+
+:testcase:
+:name: Function call
+:flags: --intermediate --intermediate-print
+:input:
+int sum(int a, int *b) {
+    return a + *b;
+}
+
+int main(int argc, char **argv) {
+    int x = 5;
+    int y = sum(x, &x);
+    return y;
+}
+:input:
+:output:
+function sum
+t0 = read b {size=4}
+t1 = read t0 {size=4}
+t0 = read a {size=4}
+t2 = t0 + t1
+return t2
+function main
+write x, 5 {size=4}
+t0 = read x {size=4}
+parameter sum, a, t0
+parameter sum, b, x
+t0 = call sum {params=20}
+write y, t0 {size=4}
+t0 = read y {size=4}
+return t0
+:output:
+:testcase:
+
+:testcase:
+:name: If-else statement
+:flags: --intermediate --intermediate-print
+:input:
+int main(int argc, char **argv) {
+    if (argc < 5) {
+        return 0;
+    } else {
+        return 1;
+    }
+    return 0;
+}
+:input:
+:output:
+function main
+t0 = read argc {size=4}
+t1 = t0 < 5
+if t1 == 0 goto L0
+return 0
+goto L1
+L0:
+return 1
+L1:
+return 0
+:output:
+:testcase:

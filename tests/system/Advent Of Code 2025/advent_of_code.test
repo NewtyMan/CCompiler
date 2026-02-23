@@ -1,0 +1,41 @@
+:testcase:
+:name: Advent of Code 2025 - Day 1
+:is_system:
+:input_file: ./tests/system/Advent of Code 2025/day1.c
+:output:
+Puzzle result (part 1): 1100
+Puzzle result (part 2): 6358
+:output:
+:testcase:
+
+:testcase:
+:name: Advent of Code 2025 - Day 2
+:is_system:
+:input_file: ./tests/system/Advent of Code 2025/day2.c
+:output:
+Puzzle result (part 1): 26255179562
+Puzzle result (part 2): 31680313976
+:output:
+:testcase:
+
+:testcase:
+:name: Advent of Code 2025 - Day 3
+:is_system:
+:input_file: ./tests/system/Advent of Code 2025/day3.c
+:output:
+Puzzle result (part 1): 17330
+Puzzle result (part 2): 171518260283767
+:output:
+:testcase:
+
+:testcase:
+:name: Advent of Code 2025 - Day 4
+:is_system:
+:input_file: ./tests/system/Advent of Code 2025/day4.c
+:output:
+Rows: 135
+Columns: 135
+Puzzle result (part 1): 1370
+Puzzle result (part 2): 8437
+:output:
+:testcase:

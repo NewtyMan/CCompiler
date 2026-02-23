@@ -1,0 +1,124 @@
+:testcase:
+:name: Access of identifier before declaration
+:error_code: 4
+:flags: --semantic
+:input:
+int main(int argc, char **argv) {
+    int x = 0;
+    x += y;
+    {int y = 1;}
+    return 0;
+}
+:input:
+:testcase:
+
+:testcase:
+:name: Function call before declaration
+:error_code: 4
+:flags: --semantic
+:input:
+int main(int argc, char **argv) {
+    return sum(1, 2);
+}
+
+int sum(int a, int b) {
+    return a + b;
+}
+:input:
+:testcase:
+
+:testcase:
+:name: Identifier access in different scopes
+:error_code: 4
+:flags: --semantic
+:input:
+int main(int argc, char **argv) {
+    int x = 0;
+    if (x == 0) {
+        int y = 1;
+    }
+    return x + y;
+}
+:input:
+:testcase:
+
+:testcase:
+:name: Case statement outside switch should fail
+:error_code: 4
+:flags: --semantic
+:input:
+int main(int argc, char **argv) {
+    case 1:
+        return 1;
+    return 0;
+}
+:input:
+:testcase:
+
+:testcase:
+:name: Default statement outside switch should fail
+:error_code: 4
+:flags: --semantic
+:input:
+int main(int argc, char **argv) {
+    default:
+        return 0;
+    return 0;
+}
+:input:
+:testcase:
+
+:testcase:
+:name: Break outside iteration statements should fail
+:error_code: 4
+:flags: --semantic
+:input:
+int main(int argc, char **argv) {
+    break;
+    return 0;
+}
+:input:
+:testcase:
+
+:testcase:
+:name: Continue outside iteration statements should fail
+:error_code: 4
+:flags: --semantic
+:input:
+int main(int argc, char **argv) {
+    continue;
+    return 0;
+}
+:input:
+:testcase:
+
+:testcase:
+:name: Default statement should be last in switch
+:error_code: 4
+:flags: --semantic
+:input:
+int main(int argc, char **argv) {
+    switch (1) {
+        case 0:
+        case 1:
+            return 1;
+        default:
+            return 2;
+        case 3:
+            return 3;
+    }
+    return 0;
+}
+:input:
+:testcase:
+
+:testcase:
+:name: Main function is required
+:error_code: 4
+:flags: --semantic
+:input:
+int sum(int a, int b) {
+    return a + b;
+}
+:input:
+:testcase:

@@ -1,0 +1,547 @@
+:testcase:
+:name: Function signature declaration
+:flags: --syntax --syntax-print
+:input:
+int my_test_function(int arg1, char arg2);
+:input:
+:output:
+[Function, name=my_test_function, type=( int )]
+  [Parameters]
+    [Parameter, name=arg1, type=( int )]
+    [Parameter, name=arg2, type=( char )]
+:output:
+:testcase:
+
+:testcase:
+:name: Empty function
+:flags: --syntax --syntax-print
+:input:
+int main() {}
+:input:
+:output:
+[Function, name=main, type=( int )]
+  [FuncBody]
+    [CompoundStmt]
+:output:
+:testcase:
+
+:testcase:
+:name: Function with parameters
+:flags: --syntax --syntax-print
+:input:
+int main(int argc, char **argv) {
+    return 0;
+}
+:input:
+:output:
+[Function, name=main, type=( int )]
+  [Parameters]
+    [Parameter, name=argc, type=( int )]
+    [Parameter, name=argv, type=( char** )]
+  [FuncBody]
+    [CompoundStmt]
+      [Return]
+        [Constant, type=NumberOct, value='0']
+:output:
+:testcase:
+
+:testcase:
+:name: K&R function declarations should fail
+:flags: --syntax --syntax-print
+:error_code: 2
+:input:
+int sum(a, b)
+int a;
+int b;
+{
+    return a + b;
+}
+:input:
+:testcase:
+
+:testcase:
+:name: Variadic functions should fail
+:flags: --syntax --syntax-print
+:error_code: 2
+:input:
+int main(int argc, ...) {
+    return 0;
+}
+:input:
+:testcase:
+
+
+
+
+
+:testcase:
+:name: Switch statement
+:flags: --syntax --syntax-print
+:input:
+int main(int argc, char **argv) {
+    switch (argc) {
+        case 0:
+        case 1:
+            argc += 1;
+            break;
+        case 2:
+            argc -= 1;
+            break;
+        default:
+            break;
+    }
+
+    return 0;
+}
+:input:
+:output:
+[Function, name=main, type=( int )]
+  [Parameters]
+    [Parameter, name=argc, type=( int )]
+    [Parameter, name=argv, type=( char** )]
+  [FuncBody]
+    [CompoundStmt]
+      [Switch]
+        [Expr]
+          [Constant, type=Identifier, value='argc']
+        [Cases]
+          [CompoundStmt]
+            [Case]
+              [Expression]
+                [Constant, type=NumberOct, value='0']
+              [Statement]
+                [Case]
+                  [Expression]
+                    [Constant, type=NumberDec, value='1']
+                  [Statement]
+                    [Binary, operator='+=']
+                      [Constant, type=Identifier, value='argc']
+                      [Constant, type=NumberDec, value='1']
+            [Break]
+            [Case]
+              [Expression]
+                [Constant, type=NumberDec, value='2']
+              [Statement]
+                [Binary, operator='-=']
+                  [Constant, type=Identifier, value='argc']
+                  [Constant, type=NumberDec, value='1']
+            [Break]
+            [Default]
+              [Break]
+      [Return]
+        [Constant, type=NumberOct, value='0']
+:output:
+:testcase:
+
+:testcase:
+:name: If-else statement
+:flags: --syntax --syntax-print
+:input:
+int main(int argc, char **argv) {
+    if (argc == 0) {
+        return 0;
+    } else if (argc == 1) {
+        return 1;
+    } else {
+        return 2;
+    }
+    return 0;
+}
+:input:
+:output:
+[Function, name=main, type=( int )]
+  [Parameters]
+    [Parameter, name=argc, type=( int )]
+    [Parameter, name=argv, type=( char** )]
+  [FuncBody]
+    [CompoundStmt]
+      [IfElse]
+        [Condition]
+          [Binary, operator='==']
+            [Constant, type=Identifier, value='argc']
+            [Constant, type=NumberOct, value='0']
+        [IfStmt]
+          [CompoundStmt]
+            [Return]
+              [Constant, type=NumberOct, value='0']
+        [ElseStmt]
+          [IfElse]
+            [Condition]
+              [Binary, operator='==']
+                [Constant, type=Identifier, value='argc']
+                [Constant, type=NumberDec, value='1']
+            [IfStmt]
+              [CompoundStmt]
+                [Return]
+                  [Constant, type=NumberDec, value='1']
+            [ElseStmt]
+              [CompoundStmt]
+                [Return]
+                  [Constant, type=NumberDec, value='2']
+      [Return]
+        [Constant, type=NumberOct, value='0']
+:output:
+:testcase:
+
+:testcase:
+:name: While statement
+:flags: --syntax --syntax-print
+:input:
+int main(int argc, char **argv) {
+    int x = 0;
+    while (x < argc) {
+        x++;
+    }
+    return x;
+}
+:input:
+:output:
+[Function, name=main, type=( int )]
+  [Parameters]
+    [Parameter, name=argc, type=( int )]
+    [Parameter, name=argv, type=( char** )]
+  [FuncBody]
+    [CompoundStmt]
+      [Declarations]
+        [Declarator, name=x, type=( int )]
+          [Constant, type=NumberOct, value='0']
+      [While]
+        [Condition]
+          [Binary, operator='<']
+            [Constant, type=Identifier, value='x']
+            [Constant, type=Identifier, value='argc']
+        [Statement]
+          [CompoundStmt]
+            [Postfix, operator=++]
+              [Constant, type=Identifier, value='x']
+      [Return]
+        [Constant, type=Identifier, value='x']
+:output:
+:testcase:
+
+:testcase:
+:name: Do-while statement
+:flags: --syntax --syntax-print
+:input:
+int main(int argc, char **argv) {
+    int x = 0;
+    do {
+        x++;
+    } while (x < argc);
+    return x;
+}
+:input:
+:output:
+[Function, name=main, type=( int )]
+  [Parameters]
+    [Parameter, name=argc, type=( int )]
+    [Parameter, name=argv, type=( char** )]
+  [FuncBody]
+    [CompoundStmt]
+      [Declarations]
+        [Declarator, name=x, type=( int )]
+          [Constant, type=NumberOct, value='0']
+      [DoWhile]
+        [Condition]
+          [Binary, operator='<']
+            [Constant, type=Identifier, value='x']
+            [Constant, type=Identifier, value='argc']
+        [Statement]
+          [CompoundStmt]
+            [Postfix, operator=++]
+              [Constant, type=Identifier, value='x']
+      [Return]
+        [Constant, type=Identifier, value='x']
+:output:
+:testcase:
+
+:testcase:
+:name: For statement
+:flags: --syntax --syntax-print
+:input:
+int main(int argc, char **argv) {
+    int i, x = 0;
+    for (i = 0; i < argc; i++) {
+        x += i;
+    }
+    return x;
+}
+:input:
+:output:
+[Function, name=main, type=( int )]
+  [Parameters]
+    [Parameter, name=argc, type=( int )]
+    [Parameter, name=argv, type=( char** )]
+  [FuncBody]
+    [CompoundStmt]
+      [Declarations]
+        [Declarator, name=i, type=( int )]
+        [Declarator, name=x, type=( int )]
+          [Constant, type=NumberOct, value='0']
+      [ForStmt]
+        [LowExpr]
+          [Binary, operator='=']
+            [Constant, type=Identifier, value='i']
+            [Constant, type=NumberOct, value='0']
+        [HighExpr]
+          [Binary, operator='<']
+            [Constant, type=Identifier, value='i']
+            [Constant, type=Identifier, value='argc']
+        [StepExpr]
+          [Postfix, operator=++]
+            [Constant, type=Identifier, value='i']
+        [Body]
+          [CompoundStmt]
+            [Binary, operator='+=']
+              [Constant, type=Identifier, value='x']
+              [Constant, type=Identifier, value='i']
+      [Return]
+        [Constant, type=Identifier, value='x']
+:output:
+:testcase:
+
+:testcase:
+:name: Continue statement
+:flags: --syntax --syntax-print
+:input:
+int main(int argc, char **argv) {
+    int i;
+    for (i = 0; i < argc; i++) {
+        if (i % 2 == 0) {
+            continue;
+        }
+    }
+}
+:input:
+:output:
+[Function, name=main, type=( int )]
+  [Parameters]
+    [Parameter, name=argc, type=( int )]
+    [Parameter, name=argv, type=( char** )]
+  [FuncBody]
+    [CompoundStmt]
+      [Declarations]
+        [Declarator, name=i, type=( int )]
+      [ForStmt]
+        [LowExpr]
+          [Binary, operator='=']
+            [Constant, type=Identifier, value='i']
+            [Constant, type=NumberOct, value='0']
+        [HighExpr]
+          [Binary, operator='<']
+            [Constant, type=Identifier, value='i']
+            [Constant, type=Identifier, value='argc']
+        [StepExpr]
+          [Postfix, operator=++]
+            [Constant, type=Identifier, value='i']
+        [Body]
+          [CompoundStmt]
+            [IfElse]
+              [Condition]
+                [Binary, operator='==']
+                  [Binary, operator='%']
+                    [Constant, type=Identifier, value='i']
+                    [Constant, type=NumberDec, value='2']
+                  [Constant, type=NumberOct, value='0']
+              [IfStmt]
+                [CompoundStmt]
+                  [Continue]
+:output:
+:testcase:
+
+
+
+
+
+:testcase:
+:name: Enumerators
+:flags: --syntax --syntax-print
+:input:
+enum color {
+    COLOR_RED,
+    COLOR_BLUE = 2,
+};
+
+typedef enum country {
+    COUNTRY_SLOVENIA
+} country_t;
+:input:
+:output:
+[Enum, name=color]
+  [Enumerator]
+    [Constant, type=Identifier, value='COLOR_RED']
+  [Enumerator]
+    [Constant, type=Identifier, value='COLOR_BLUE']
+    [Constant, type=NumberDec, value='2']
+[TypeDef, name=country_t]
+  [Enum, name=country]
+    [Enumerator]
+      [Constant, type=Identifier, value='COUNTRY_SLOVENIA']
+:output:
+:testcase:
+
+
+
+
+
+:testcase:
+:name: Structures
+:flags: --syntax --syntax-print
+:input:
+struct triangle {
+    char *name;
+    int a, b, c;
+};
+
+typedef struct square {
+    int a, b;
+    int c, d;
+} square_t;
+:input:
+:output:
+[Struct, name=triangle]
+  [Declarations]
+    [Declarator, name=name, type=( char* )]
+  [Declarations]
+    [Declarator, name=a, type=( int )]
+    [Declarator, name=b, type=( int )]
+    [Declarator, name=c, type=( int )]
+[TypeDef, name=square_t]
+  [Struct, name=square]
+    [Declarations]
+      [Declarator, name=a, type=( int )]
+      [Declarator, name=b, type=( int )]
+    [Declarations]
+      [Declarator, name=c, type=( int )]
+      [Declarator, name=d, type=( int )]
+:output:
+:testcase:
+
+
+
+
+
+:testcase:
+:name: Constant declarations
+:flags: --syntax --syntax-print
+:input:
+int main(int argc, char **argv) {
+    const int x = 0;
+    return x;
+}
+:input:
+:output:
+[Function, name=main, type=( int )]
+  [Parameters]
+    [Parameter, name=argc, type=( int )]
+    [Parameter, name=argv, type=( char** )]
+  [FuncBody]
+    [CompoundStmt]
+      [Declarations]
+        [Declarator, name=x, type=( const int )]
+          [Constant, type=NumberOct, value='0']
+      [Return]
+        [Constant, type=Identifier, value='x']
+:output:
+:testcase:
+
+:testcase:
+:name: Pointer declarations
+:flags: --syntax --syntax-print
+:input:
+int main(int argc, char **argv) {
+    int x = 0;
+    int *y = &x;
+    int **z = &y;
+
+    return **z;
+}
+:input:
+:output:
+[Function, name=main, type=( int )]
+  [Parameters]
+    [Parameter, name=argc, type=( int )]
+    [Parameter, name=argv, type=( char** )]
+  [FuncBody]
+    [CompoundStmt]
+      [Declarations]
+        [Declarator, name=x, type=( int )]
+          [Constant, type=NumberOct, value='0']
+      [Declarations]
+        [Declarator, name=y, type=( int* )]
+          [Unary, operator=&]
+            [Constant, type=Identifier, value='x']
+      [Declarations]
+        [Declarator, name=z, type=( int** )]
+          [Unary, operator=&]
+            [Constant, type=Identifier, value='y']
+      [Return]
+        [Unary, operator=*]
+          [Unary, operator=*]
+            [Constant, type=Identifier, value='z']
+:output:
+:testcase:
+
+:testcase:
+:name: Array declarations
+:flags: --syntax --syntax-print
+:input:
+int main(int argc, char **argv) {
+    int x[5];
+    int y[5][10];
+
+    int result = x[0] + y[1][2];
+    return result;
+}
+:input:
+:output:
+[Function, name=main, type=( int )]
+  [Parameters]
+    [Parameter, name=argc, type=( int )]
+    [Parameter, name=argv, type=( char** )]
+  [FuncBody]
+    [CompoundStmt]
+      [Declarations]
+        [Declarator, name=x, type=( int )]
+          [Array, size=5]
+      [Declarations]
+        [Declarator, name=y, type=( int )]
+          [Array, size=5]
+            [Array, size=10]
+      [Declarations]
+        [Declarator, name=result, type=( int )]
+          [Binary, operator='+']
+            [ArrayAccess]
+              [Array]
+                [Constant, type=Identifier, value='x']
+              [Expression]
+                [Constant, type=NumberOct, value='0']
+            [ArrayAccess]
+              [Array]
+                [ArrayAccess]
+                  [Array]
+                    [Constant, type=Identifier, value='y']
+                  [Expression]
+                    [Constant, type=NumberDec, value='1']
+              [Expression]
+                [Constant, type=NumberDec, value='2']
+      [Return]
+        [Constant, type=Identifier, value='result']
+:output:
+:testcase:
+
+:testcase:
+:name: Compound statement - declarations after statements should fail
+:flags: --syntax --syntax-print
+:error_code: 2
+:input:
+int main(int argc, char **argv) {
+    int x;
+    int *y;
+
+    x = 5;
+    int z = 0;
+    return z;
+}
+:input:
+:testcase:

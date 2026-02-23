@@ -1,0 +1,33 @@
+:testcase:
+:name: File interaction
+:is_system:
+:input_file: ./tests/system/file_interaction.c
+:output:
+Successfully opened input file: file_interaction.txt
+File contains: 5 vowels.
+Input file closed
+:output:
+:testcase:
+
+:testcase:
+:name: Recursion functions
+:is_system:
+:input_file: ./tests/system/recursion.c
+:output:
+Factorial of 8 is: 40320
+Fibonacci of 15 is: 610
+Factorial tail of 5 and 5 is: 600
+:output:
+:testcase:
+
+:testcase:
+:name: Search algorithms
+:is_system:
+:input_file: ./tests/system/search_algorithms.c
+:output:
+Array: [-50, -23, 0, 5, 18, 32, 55, 60, 85, 99]
+Linear search index: 8
+Binary search index: 8
+Interpolation search index: 8
+:output:
+:testcase:

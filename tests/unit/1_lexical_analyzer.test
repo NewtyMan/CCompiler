@@ -1,0 +1,490 @@
+:testcase:
+:name: Numeric constants
+:flags: --lexical --lexical-print
+:input:
+1
+10
+0
+0755
+0xFF
+0x0A
+0xF
+0.5
+0.55
+10.55
+:input:
+:output:
+[1, 6, 1:1-1:2]
+[10, 6, 2:1-2:3]
+[0, 7, 3:1-3:2]
+[0755, 7, 4:1-4:5]
+[0xFF, 8, 5:1-5:5]
+[0x0A, 8, 6:1-6:5]
+[0xF, 8, 7:1-7:4]
+[0.5, 9, 8:1-8:4]
+[0.55, 9, 9:1-9:5]
+[10.55, 9, 10:1-10:6]
+:output:
+:testcase:
+
+:testcase:
+:name: Floating constants require decimal part
+:flags: --lexical --lexical-print
+:input:
+.5
+.55
+:input:
+:output:
+[., 77, 1:1-1:2]
+[5, 6, 1:2-1:3]
+[., 77, 2:1-2:2]
+[55, 6, 2:2-2:4]
+:output:
+:testcase:
+
+:testcase:
+:name: Floating constant without floating part should fail
+:flags: --lexical --lexical-print
+:error_code: 1
+:input:
+0.
+:input:
+:testcase:
+
+:testcase:
+:name: Floating constant without floating part should fail #2
+:flags: --lexical --lexical-print
+:error_code: 1
+:input:
+10.
+:input:
+:testcase:
+
+
+
+
+
+:testcase:
+:name: Inline comment
+:flags: --lexical --lexical-print
+:input:
+int main() {
+    // This is an inline comment
+}
+:input:
+:output:
+[int, 26, 1:1-1:4]
+[main, 12, 1:5-1:9]
+[(, 70, 1:9-1:10]
+[), 71, 1:10-1:11]
+[{, 74, 1:12-1:13]
+[}, 75, 3:1-3:2]
+:output:
+:testcase:
+
+:testcase:
+:name: Multiline comment
+:flags: --lexical --lexical-print
+:input:
+int main() {
+    /**
+     *  This is a multiline comment
+     **/
+}
+:input:
+:output:
+[int, 26, 1:1-1:4]
+[main, 12, 1:5-1:9]
+[(, 70, 1:9-1:10]
+[), 71, 1:10-1:11]
+[{, 74, 1:12-1:13]
+[}, 75, 5:1-5:2]
+:output:
+:testcase:
+
+:testcase:
+:name: Multiline comments should not nest
+:flags: --lexical --lexical-print
+:input:
+int main() {
+    /**
+     *  /* Unclosed multiline comment
+     **/
+}
+:input:
+:output:
+[int, 26, 1:1-1:4]
+[main, 12, 1:5-1:9]
+[(, 70, 1:9-1:10]
+[), 71, 1:10-1:11]
+[{, 74, 1:12-1:13]
+[}, 75, 5:1-5:2]
+:output:
+:testcase:
+
+:testcase:
+:name: Inline comments should not nest
+:flags: --lexical --lexical-print
+:input:
+int main() {
+    // Inline comment // nested comment
+}
+:input:
+:output:
+[int, 26, 1:1-1:4]
+[main, 12, 1:5-1:9]
+[(, 70, 1:9-1:10]
+[), 71, 1:10-1:11]
+[{, 74, 1:12-1:13]
+[}, 75, 3:1-3:2]
+:output:
+:testcase:
+
+:testcase:
+:name: Unclosed multiline comment should fail
+:flags: --lexical --lexical-print
+:error_code: 1
+:input:
+int main() {
+    /**
+     *  Unclosed multiline comment
+}
+:input:
+:testcase:
+
+
+
+
+
+
+:testcase:
+:name: Single character constant
+:flags: --lexical --lexical-print
+:input:
+'a'
+:input:
+:output:
+['a', 4, 1:1-1:4]
+:output:
+:testcase:
+
+:testcase:
+:name: Multiple character constant
+:flags: --lexical --lexical-print
+:input:
+'abc'
+:input:
+:output:
+['abc', 4, 1:1-1:6]
+:output:
+:testcase:
+
+:testcase:
+:name: Escaped characters in character constants
+:flags: --lexical --lexical-print
+:input:
+'\''
+'\"'
+'\n'
+'\t'
+'\v'
+'\0'
+'\x556'
+:input:
+:output:
+['\'', 4, 1:1-1:5]
+['\"', 4, 2:1-2:5]
+['\n', 4, 3:1-3:5]
+['\t', 4, 4:1-4:5]
+['\v', 4, 5:1-5:5]
+['\0', 4, 6:1-6:5]
+['\x556', 4, 7:1-7:8]
+:output:
+:testcase:
+
+:testcase:
+:name: Empty character constant should fail
+:flags: --lexical --lexical-print
+:error_code: 1
+:input:
+''
+:input:
+:testcase:
+
+:testcase:
+:name: Unclosed character constant should fail
+:flags: --lexical --lexical-print
+:error_code: 1
+:input:
+char x = '
+:input:
+:testcase:
+
+:testcase:
+:name: Escaped closing single parenthesis should fail
+:flags: --lexical --lexical-print
+:error_code: 1
+:input:
+char x = '\';
+:input:
+:testcase:
+
+:testcase:
+:name: Newline in character constant should fail
+:flags: --lexical --lexical-print
+:error_code: 1
+:input:
+char x = 'a
+';
+:input:
+:testcase:
+
+
+
+
+
+:testcase:
+:name: String constant
+:flags: --lexical --lexical-print
+:input:
+"my test string"
+:input:
+:output:
+["my test string", 3, 1:1-1:17]
+:output:
+:testcase:
+
+:testcase:
+:name: Escaped characters in string
+:flags: --lexical --lexical-print
+:input:
+"\""
+"\n"
+"\x55"
+"\0"
+:input:
+:output:
+["\"", 3, 1:1-1:5]
+["\n", 3, 2:1-2:5]
+["\x55", 3, 3:1-3:7]
+["\0", 3, 4:1-4:5]
+:output:
+:testcase:
+
+:testcase:
+:name: Empty string constants are allowed
+:flags: --lexical --lexical-print
+:input:
+""
+:input:
+:output:
+["", 3, 1:1-1:3]
+:output:
+:testcase:
+
+:testcase:
+:name: Unclosed string constants should fail
+:flags: --lexical --lexical-print
+:error_code: 1
+:input:
+"
+:input:
+:testcase:
+
+:testcase:
+:name: Escaped closing double parenthesis should fail
+:flags: --lexical --lexical-print
+:error_code: 1
+:input:
+"\"
+:input:
+:testcase:
+
+:testcase:
+:name: Newline in string constant should fail
+:flags: --lexical --lexical-print
+:error_code: 1
+:input:
+"my test
+string"
+:input:
+:testcase:
+
+
+
+
+
+:testcase:
+:name: Identifiers
+:flags: --lexical --lexical-print
+:input:
+_test
+x
+my_12_identifier
+:input:
+:output:
+[_test, 12, 1:1-1:6]
+[x, 12, 2:1-2:2]
+[my_12_identifier, 12, 3:1-3:17]
+:output:
+:testcase:
+
+:testcase:
+:name: Identifiers can't start with a number
+:flags: --lexical --lexical-print
+:input:
+12identifier_name
+:input:
+:output:
+[12, 6, 1:1-1:3]
+[identifier_name, 12, 1:3-1:18]
+:output:
+:testcase:
+
+:testcase:
+:name: Keywords
+:flags: --lexical --lexical-print
+:input:
+break
+case
+char
+const
+continue
+default
+do
+else
+enum
+float
+for
+if
+int
+return
+struct
+switch
+typedef
+void
+while
+:input:
+:output:
+[break, 13, 1:1-1:6]
+[case, 14, 2:1-2:5]
+[char, 15, 3:1-3:5]
+[const, 16, 4:1-4:6]
+[continue, 17, 5:1-5:9]
+[default, 18, 6:1-6:8]
+[do, 19, 7:1-7:3]
+[else, 21, 8:1-8:5]
+[enum, 22, 9:1-9:5]
+[float, 23, 10:1-10:6]
+[for, 24, 11:1-11:4]
+[if, 25, 12:1-12:3]
+[int, 26, 13:1-13:4]
+[return, 28, 14:1-14:7]
+[struct, 31, 15:1-15:7]
+[switch, 32, 16:1-16:7]
+[typedef, 33, 17:1-17:8]
+[void, 35, 18:1-18:5]
+[while, 36, 19:1-19:6]
+:output:
+:testcase:
+
+
+
+
+
+:testcase:
+:name: Operators
+:flags: --lexical --lexical-print
+:input:
+(
+)
+[
+]
+{
+}
+,
+.
+?
+:
+;
++
+++
++=
+-
+--
+-=
+&
+&&
+&=
+|
+||
+|=
+~
+>
+>>
+>>=
+>=
+<
+<<
+<<=
+<=
+*
+*=
+%
+%=
+^
+^=
+/
+/=
+=
+==
+!
+!=
+:input:
+:output:
+[(, 70, 1:1-1:2]
+[), 71, 2:1-2:2]
+[[, 72, 3:1-3:2]
+[], 73, 4:1-4:2]
+[{, 74, 5:1-5:2]
+[}, 75, 6:1-6:2]
+[,, 76, 7:1-7:2]
+[., 77, 8:1-8:2]
+[?, 78, 9:1-9:2]
+[:, 79, 10:1-10:2]
+[;, 80, 11:1-11:2]
+[+, 37, 12:1-12:2]
+[++, 38, 13:1-13:3]
+[+=, 39, 14:1-14:3]
+[-, 40, 15:1-15:2]
+[--, 41, 16:1-16:3]
+[-=, 42, 17:1-17:3]
+[&, 43, 18:1-18:2]
+[&&, 44, 19:1-19:3]
+[&=, 45, 20:1-20:3]
+[|, 46, 21:1-21:2]
+[||, 47, 22:1-22:3]
+[|=, 48, 23:1-23:3]
+[~, 69, 24:1-24:2]
+[>, 61, 25:1-25:2]
+[>>, 63, 26:1-26:3]
+[>>=, 64, 27:1-27:4]
+[>=, 62, 28:1-28:3]
+[<, 65, 29:1-29:2]
+[<<, 67, 30:1-30:3]
+[<<=, 68, 31:1-31:4]
+[<=, 66, 32:1-32:3]
+[*, 49, 33:1-33:2]
+[*=, 50, 34:1-34:3]
+[%, 53, 35:1-35:2]
+[%=, 54, 36:1-36:3]
+[^, 55, 37:1-37:2]
+[^=, 56, 38:1-38:3]
+[/, 51, 39:1-39:2]
+[/=, 52, 40:1-40:3]
+[=, 57, 41:1-41:2]
+[==, 58, 42:1-42:3]
+[!, 59, 43:1-43:2]
+[!=, 60, 44:1-44:3]
+:output:
+:testcase:

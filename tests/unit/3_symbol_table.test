@@ -1,0 +1,175 @@
+:testcase:
+:name: Empty function should reserve parameter space
+:flags: --symbol --symbol-print
+:input:
+int test();
+:input:
+:output:
+[BlockScope]
+  [Function, name=test, size=12]
+:output:
+:testcase:
+
+:testcase:
+:name: Function with parameters
+:flags: --symbol --symbol-print
+:input:
+int main(int argc, char** argv) {
+    return 0;
+}
+:input:
+:output:
+[BlockScope]
+  [Function, name=main, size=20]
+    [Parameter, name=argc, type=(int), size=4, offset=12]
+    [Parameter, name=argv, type=(char**), size=4, offset=16]
+:output:
+:testcase:
+
+:testcase:
+:name: Declaration types sizes
+:flags: --symbol --symbol-print
+:input:
+int main() {
+    int x;
+    char y;
+    char *z;
+}
+:input:
+:output:
+[BlockScope]
+  [Function, name=main, size=21]
+    [Declaration, name=x, type=(int), size=4, offset=-4]
+    [Declaration, name=y, type=(char), size=1, offset=-5]
+    [Declaration, name=z, type=(char*), size=4, offset=-9]
+:output:
+:testcase:
+
+:testcase:
+:name: Scoped symbol tables
+:flags: --symbol --symbol-print
+:input:
+int main(int argc, char** argv) {
+    int x;
+    if (argc > 1) {
+        int y;
+        while (y > 0) {
+            int z;
+        }
+    }
+}
+:input:
+:output:
+[BlockScope]
+  [Function, name=main, size=32]
+    [Parameter, name=argc, type=(int), size=4, offset=12]
+    [Parameter, name=argv, type=(char**), size=4, offset=16]
+    [Declaration, name=x, type=(int), size=4, offset=-4]
+    [BlockScope]
+      [Declaration, name=y, type=(int), size=4, offset=-8]
+      [BlockScope]
+        [Declaration, name=z, type=(int), size=4, offset=-12]
+:output:
+:testcase:
+
+:testcase:
+:name: Statements should create new scopes
+:flags: --symbol --symbol-print
+:input:
+int main(int argc, char** argv) {
+    int x;
+    if (argc == 0) {
+        int y;
+    } else {
+        int y;
+    }
+
+    do {
+        int y;
+    } while (0);
+
+    while (0) {
+        int y;
+    }
+
+    for (;;) {
+        int y;
+    }
+}
+:input:
+:output:
+[BlockScope]
+  [Function, name=main, size=44]
+    [Parameter, name=argc, type=(int), size=4, offset=12]
+    [Parameter, name=argv, type=(char**), size=4, offset=16]
+    [Declaration, name=x, type=(int), size=4, offset=-4]
+    [BlockScope]
+      [Declaration, name=y, type=(int), size=4, offset=-8]
+    [BlockScope]
+      [Declaration, name=y, type=(int), size=4, offset=-12]
+    [BlockScope]
+      [Declaration, name=y, type=(int), size=4, offset=-16]
+    [BlockScope]
+      [Declaration, name=y, type=(int), size=4, offset=-20]
+    [BlockScope]
+      [Declaration, name=y, type=(int), size=4, offset=-24]
+:output:
+:testcase:
+
+:testcase:
+:name: Enumerators
+:flags: --symbol --symbol-print
+:input:
+enum color {
+    COLOR_RED,
+    COLOR_GREEN = 5,
+    COLOR_YELLOW,
+};
+
+typedef enum country {
+    COUNTRY_SLOVENIA,
+} country_t;
+:input:
+:output:
+[BlockScope]
+  [Enum, name=color]
+    [Enumerator, name=COLOR_RED, value=0]
+    [Enumerator, name=COLOR_GREEN, value=5]
+    [Enumerator, name=COLOR_YELLOW, value=6]
+  [Typedef, name=country_t]
+    [Enum, name=country]
+      [Enumerator, name=COUNTRY_SLOVENIA, value=0]
+:output:
+:testcase:
+
+:testcase:
+:name: Structures
+:flags: --symbol --symbol-print
+:input:
+struct triangle {
+    char *name;
+    int a, b, c;
+};
+
+typedef struct square {
+    char *name;
+    int a, b;
+    char c, d;
+} square_t;
+:input:
+:output:
+[BlockScope]
+  [Struct, name=triangle, size=16]
+    [Declaration, name=name, type=(char*), size=4, offset=0]
+    [Declaration, name=a, type=(int), size=4, offset=4]
+    [Declaration, name=b, type=(int), size=4, offset=8]
+    [Declaration, name=c, type=(int), size=4, offset=12]
+  [Typedef, name=square_t]
+    [Struct, name=square, size=14]
+      [Declaration, name=name, type=(char*), size=4, offset=0]
+      [Declaration, name=a, type=(int), size=4, offset=4]
+      [Declaration, name=b, type=(int), size=4, offset=8]
+      [Declaration, name=c, type=(char), size=1, offset=12]
+      [Declaration, name=d, type=(char), size=1, offset=13]
+:output:
+:testcase:

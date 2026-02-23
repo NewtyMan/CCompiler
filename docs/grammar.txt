@@ -1,0 +1,278 @@
+##################################################
+#         Root Scope Grammar Definitions         #
+##################################################
+
+translation_unit -> external_declaration translation_unit_2 .
+translation_unit_2 -> external_declaration translation_unit_2 .
+translation_unit_2 -> .
+
+external_declaration -> declaration_specifiers external_declaration_2 .
+external_declaration_2 -> SEMICOLON .
+external_declaration_2 -> pointer_opt IDENTIFIER external_declaration_3 .
+external_declaration_3 -> LPAREN function_declaration .
+external_declaration_3 -> root_variable_declaration .
+
+##################################################
+#           Function Grammar Definitions         #
+##################################################
+
+function_declaration -> parameter_list RPAREN function_declaration_2 .
+function_declaration -> RPAREN function_declaration_2 .
+function_declaration_2 -> compound_statement .
+function_declaration_2 -> SEMICOLON .
+
+parameter_list -> parameter_declaration parameter_list_2 .
+parameter_list_2 -> COMMA parameter_declaration parameter_list_2 .
+parameter_list_2 -> .
+
+parameter_declaration -> specifier_qualifier_list pointer_opt parameter_declaration_2 .
+parameter_declaration_2 -> IDENTIFIER parameter_declaration_3 .
+parameter_declaration_2 -> parameter_declaration_3 .
+parameter_declaration_3 -> LBRACKET constant_expression RBRACKET parameter_declaration_3 .
+parameter_declaration_3 -> .
+
+##################################################
+#           Variable Grammar Definitions         #
+##################################################
+
+root_variable_declaration -> LBRACKET constant_expression RBRACKET root_variable_declaration .
+root_variable_declaration -> root_variable_declaration_2 .
+root_variable_declaration_2 -> ASSIGN initializer root_variable_declaration_3 .
+root_variable_declaration_2 -> root_variable_declaration_3 .
+root_variable_declaration_3 -> COMMA IDENTIFIER root_variable_declaration .
+root_variable_declaration_3 -> SEMICOLON .
+
+declaration -> declaration_specifiers init_declarator_list SEMICOLON .
+
+init_declarator_list -> init_declarator init_declarator_list_2 .
+init_declarator_list_2 -> COMMA init_declarator init_declarator_list_2 | .
+
+init_declarator -> declarator init_declarator_2 .
+init_declarator_2 -> ASSIGN initializer .
+init_declarator_2 -> .
+
+declarator -> pointer_opt IDENTIFIER declarator_2 .
+declarator_2 -> LBRACKET constant_expression_opt RBRACKET declarator_2 .
+declarator_2 -> .
+
+initializer -> assignment_expression .
+initializer -> LBRACE initializer_list initializer_2 .
+initializer_2 -> COMMA RBRACE .
+initializer_2 -> RBRACE .
+
+initializer_list -> initializer initializer_list_2 .
+initializer_list_2 -> COMMA initializer initializer_list_2 .
+
+pointer -> MUL pointer_2 .
+pointer_2 -> MUL pointer_2 | .
+
+# type_name -> specifier_qualifier_list type_name_2 .
+# type_name_2 -> pointer | .
+
+##################################################
+#        Declaration Specifier Definitions       #
+##################################################
+
+declaration_specifiers -> TYPEDEF type_specifier .
+declaration_specifiers -> CONST type_specifier .
+declaration_specifiers -> type_specifier .
+
+specifier_qualifier_list -> CONST type_specifier .
+specifier_qualifier_list -> type_specifier .
+
+type_specifier -> VOID | CHAR | INT | FLOAT .
+type_specifier -> struct_specifier .
+type_specifier -> enum_specifier .
+type_specifier -> typedef_name .
+
+typedef_name -> TYPEDEF_IDENTIFIER . # TYPEDEF = IDENTIFIER
+
+assignment_operator -> ASSIGN .
+assignment_operator -> MUL_ASSIGN .
+assignment_operator -> DIV_ASSIGN .
+assignment_operator -> MOD_ASSIGN .
+assignment_operator -> ADD_ASSIGN .
+assignment_operator -> SUB_ASSIGN .
+assignment_operator -> LSHIFT_ASSIGN .
+assignment_operator -> RSHIFT_ASSIGN .
+assignment_operator -> AND_ASSIGN .
+assignment_operator -> XOR_ASSIGN .
+assignment_operator -> OR_ASSIGN .
+
+constant -> C_INT | C_CHAR | C_FLOAT | C_ENUM .
+
+unary_operator -> BIT_AND | MUL | ADD | SUB | TILDE | NOT | INC | DEC .
+
+##################################################
+#           Structure Grammar Definitions        #
+##################################################
+
+struct_specifier -> STRUCT IDENTIFIER struct_specifier_2 .
+struct_specifier_2 -> LBRACE struct_declaration_list RBRACE .
+struct_specifier_2 -> .
+
+struct_declaration_list -> struct_declaration struct_declaration_list_2 .
+struct_declaration_list_2 -> struct_declaration struct_declaration_list_2 | .
+
+struct_declaration -> specifier_qualifier_list struct_declarator_list SEMICOLON .
+
+struct_declarator_list -> declarator struct_declarator_list_2 .
+struct_declarator_list_2 -> COMMA declarator struct_declarator_list_2 | .
+
+##################################################
+#          Enumerator Grammar Definitions        #
+##################################################
+
+enum_specifier -> ENUM IDENTIFIER enum_specifier_2 .
+enum_specifier_2 -> LBRACE enumerator_list RBRACE .
+enum_specifier_2 -> .
+
+enumerator_list -> enumerator enumerator_list_2 .
+enumerator_list_2 -> COMMA enumerator enumerator_list_2 | .
+
+enumerator -> IDENTIFIER enumerator_2 .
+enumerator_2 -> ASSIGN constant_expression | .
+
+##################################################
+#          Statement Grammar Definitions         #
+##################################################
+
+statement -> labeled_statement .
+statement -> expression_statement .
+statement -> compound_statement .
+statement -> selection_statement .
+statement -> iteration_statement .
+statement -> jump_statement .
+statement -> asm_statement .
+
+# labeled_statement -> LABEL IDENTIFIER COLON statement .
+labeled_statement -> CASE constant_expression COLON statement .
+labeled_statement -> DEFAULT COLON statement .
+
+expression_statement -> expression SEMICOLON .
+expression_statement -> SEMICOLON .
+
+compound_statement -> LBRACE compound_statement_2 .
+compound_statement_2 -> declaration compound_statement_2 .
+compound_statement_2 -> compound_statement_3 .
+compound_statement_3 -> statement compound_statement_3 .
+compound_statement_3 -> RBRACE .
+
+selection_statement -> SWITCH LPAREN expression RPAREN statement .
+selection_statement -> IF LPAREN expression RPAREN selection_statement_2 selection_statement_3 .
+selection_statement_2 -> expression_statement | compound_statement | jump_statement .
+selection_statement_3 -> ELSE statement .
+selection_statement_3 -> .
+
+iteration_statement -> WHILE LPAREN expression RPAREN statement .
+iteration_statement -> DO statement WHILE LPAREN expression RPAREN SEMICOLON .
+iteration_statement -> FOR LPAREN iteration_statement_2 .
+iteration_statement_2 -> expression SEMICOLON iteration_statement_3 .
+iteration_statement_2 -> SEMICOLON iteration_statement_3 .
+iteration_statement_3 -> expression SEMICOLON iteration_statement_4 .
+iteration_statement_3 -> SEMICOLON iteration_statement_4 .
+iteration_statement_4 -> expression RPAREN statement .
+iteration_statement_4 -> RPAREN statement .
+
+# jump_statement -> GOTO IDENTIFIER SEMICOLON .
+jump_statement -> CONTINUE SEMICOLON .
+jump_statement -> BREAK SEMICOLON .
+jump_statement -> RETURN jump_statement_2 .
+jump_statement_2 -> expression SEMICOLON .
+jump_statement_2 -> SEMICOLON .
+
+##################################################
+#         Expression Grammar Definitions         #
+##################################################
+
+expression -> assignment_expression expression_2 .
+expression_2 -> COMMA assignment_expression expression_2 .
+expression_2 -> .
+
+assignment_expression -> conditional_expression assignment_expression_2 .
+assignment_expression_2 -> assignment_operator assignment_expression .
+assignment_expression_2 -> .
+
+conditional_expression -> logical_or_expression conditional_expression_2 .
+conditional_expression_2 -> QUESTION expression COLON conditional_expression .
+conditional_expression_2 -> .
+
+constant_expression -> conditional_expression .
+
+logical_or_expression -> logical_and_expression logical_or_expression_2 .
+logical_or_expression_2 -> OR logical_and_expression logical_or_expression_2 | .
+
+logical_and_expression -> inclusive_or_expression logical_and_expression_2 .
+logical_and_expression_2 -> AND inclusive_or_expression logical_and_expression_2 | .
+
+inclusive_or_expression -> exclusive_or_expression inclusive_or_expression_2 .
+inclusive_or_expression_2 -> BIT_OR exclusive_or_expression inclusive_or_expression_2 | .
+
+exclusive_or_expression -> and_expression exclusive_or_expression_2 .
+exclusive_or_expression_2 -> XOR and_expression exclusive_or_expression_2 | .
+
+and_expression -> equality_expression and_expression_2 .
+and_expression_2 -> BIT_AND equality_expression and_expression_2 | .
+
+equality_expression -> relational_expression equality_expression_2 .
+equality_expression_2 -> EQ relational_expression equality_expression_2 .
+equality_expression_2 -> NEQ relational_expression equality_expression_2 .
+equality_expression_2 -> .
+
+relational_expression -> shift_expression relational_expression_2 .
+relational_expression_2 -> LT shift_expression relational_expression_2 .
+relational_expression_2 -> GT shift_expression relational_expression_2 .
+relational_expression_2 -> LTE shift_expression relational_expression_2 .
+relational_expression_2 -> GTE shift_expression relational_expression_2 .
+relational_expression_2 -> .
+
+shift_expression -> additive_expression shift_expression_2 .
+shift_expression_2 -> LSHIFT additive_expression shift_expression_2 .
+shift_expression_2 -> RSHIFT additive_expression shift_expression_2 .
+shift_expression_2 -> .
+
+additive_expression -> multiplicative_expression additive_expression_2 .
+additive_expression_2 -> ADD multiplicative_expression additive_expression_2 .
+additive_expression_2 -> SUB multiplicative_expression additive_expression_2 .
+additive_expression_2 -> .
+
+multiplicative_expression -> unary_expression multiplicative_expression_2 .
+multiplicative_expression_2 -> MUL unary_expression multiplicative_expression_2 .
+multiplicative_expression_2 -> DIV unary_expression multiplicative_expression_2 .
+multiplicative_expression_2 -> MOD unary_expression multiplicative_expression_2 .
+multiplicative_expression_2 -> .
+
+unary_expression -> postfix_expression .
+unary_expression -> unary_operator unary_expression .
+unary_expression -> SIZEOF unary_expression_2 .
+unary_expression_2 -> type_specifier RPAREN .
+unary_expression_2 -> unary_expression RPAREN .
+
+
+postfix_expression -> primary_expression postfix_expression_2 .
+postfix_expression_2 -> LBRACKET expression RBRACKET postfix_expression_2 .
+postfix_expression_2 -> LPAREN postfix_expression_3 .
+postfix_expression_2 -> DOT IDENTIFIER postfix_expression_2 .
+postfix_expression_2 -> ACCESS IDENTIFIER postfix_expression_2 .
+postfix_expression_2 -> INC postfix_expression_2 .
+postfix_expression_2 -> DEC postfix_expression_2 .
+postfix_expression_2 -> .
+postfix_expression_3 -> argument_expression_list RPAREN .
+postfix_expression_3 -> RPAREN .
+
+primary_expression -> IDENTIFIER .
+primary_expression -> constant .
+primary_expression -> STRING .
+primary_expression -> LPAREN primary_expression_2 .
+primary_expression_2 -> expression RPAREN .
+primary_expression_2 -> type_name RPAREN primary_expression .
+
+argument_expression_list -> assignment_expression argument_expression_list_2 .
+argument_expression_list_2 -> COMMA assignment_expression argument_expression_list_2 | .
+
+##################################################
+#                      Other                     #
+##################################################
+
+pointer_opt -> pointer | .
+constant_expression_opt -> constant_expression | .

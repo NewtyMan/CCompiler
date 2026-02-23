@@ -1,0 +1,617 @@
+:testcase:
+:name: c-testsuite - #00001
+:is_system:
+:input:
+int
+main()
+{
+	return 0;
+}
+:input:
+:output:
+:output:
+:testcase:
+
+:testcase:
+:name: c-testsuite - #00002
+:is_system:
+:input:
+int
+main()
+{
+	return 3-3;
+}
+:input:
+:output:
+:output:
+:testcase:
+
+:testcase:
+:name: c-testsuite - #00003
+:is_system:
+:input:
+int
+main()
+{
+	int x;
+
+	x = 4;
+	return x - 4;
+}
+:input:
+:output:
+:output:
+:testcase:
+
+:testcase:
+:name: c-testsuite - #00004
+:is_system:
+:input:
+int
+main()
+{
+	int x;
+	int *p;
+
+	x = 4;
+	p = &x;
+	*p = 0;
+
+	return *p;
+}
+:input:
+:output:
+:output:
+:testcase:
+
+:testcase:
+:name: c-testsuite - #00005
+:is_system:
+:input:
+int
+main()
+{
+	int x;
+	int *p;
+	int **pp;
+
+	x = 0;
+	p = &x;
+	pp = &p;
+
+	if(*p) {
+		return 1;
+	}
+	if(**pp) {
+		return 1;
+    }
+	else {
+		**pp = 1;
+    }
+
+	if(x) {
+		return 0;
+    }
+	else {
+		return 1;
+    }
+}
+:input:
+:output:
+:output:
+:testcase:
+
+:testcase:
+:name: c-testsuite - #00006
+:is_system:
+:input:
+int
+main()
+{
+	int x;
+
+	x = 50;
+	while (x)
+		x = x - 1;
+	return x;
+}
+:input:
+:output:
+:output:
+:testcase:
+
+:testcase:
+:name: c-testsuite - #00007
+:is_system:
+:input:
+int
+main()
+{
+	int x;
+
+	x = 1;
+	for(x = 10; x; x = x - 1)
+		;
+	if(x)
+		return 1;
+	x = 10;
+	for (;x;)
+		x = x - 1;
+	return x;
+}
+:input:
+:output:
+:output:
+:testcase:
+
+:testcase:
+:name: c-testsuite - #00008
+:is_system:
+:input:
+int
+main()
+{
+	int x;
+
+	x = 50;
+	do
+		x = x - 1;
+	while(x);
+	return x;
+}
+:input:
+:output:
+:output:
+:testcase:
+
+:testcase:
+:name: c-testsuite - #00009
+:is_system:
+:input:
+int
+main()
+{
+	int x;
+
+	x = 1;
+	x = x * 10;
+	x = x / 2;
+	x = x % 3;
+	return x - 2;
+}
+:input:
+:output:
+:output:
+:testcase:
+
+:testcase:
+:name: c-testsuite - #00011
+:is_system:
+:input:
+int
+main()
+{
+	int x;
+	int y;
+	x = y = 0;
+	return x;
+}
+:input:
+:output:
+:output:
+:testcase:
+
+:testcase:
+:name: c-testsuite - #00012
+:is_system:
+:input:
+int
+main()
+{
+	return (2 + 2) * 2 - 8;
+}
+:input:
+:output:
+:output:
+:testcase:
+
+:testcase:
+:name: c-testsuite - #00013
+:is_system:
+:input:
+int
+main()
+{
+	int x;
+	int *p;
+
+	x = 0;
+	p = &x;
+	return p[0];
+}
+:input:
+:output:
+:output:
+:testcase:
+
+:testcase:
+:name: c-testsuite - #00014
+:is_system:
+:input:
+int
+main()
+{
+	int x;
+	int *p;
+
+	x = 1;
+	p = &x;
+	p[0] = 0;
+	return x;
+}
+:input:
+:output:
+:output:
+:testcase:
+
+:testcase:
+:name: c-testsuite - #00015
+:is_system:
+:input:
+int
+main()
+{
+	int arr[2];
+
+	arr[0] = 1;
+	arr[1] = 2;
+
+	return arr[0] + arr[1] - 3;
+}
+:input:
+:output:
+:output:
+:testcase:
+
+:testcase:
+:name: c-testsuite - #00016
+:is_system:
+:input:
+int
+main()
+{
+	int arr[2];
+	int *p;
+
+	p = &arr[1];
+	*p = 0;
+	return arr[1];
+}
+:input:
+:output:
+:output:
+:testcase:
+
+:testcase:
+:name: c-testsuite - #00020
+:is_system:
+:input:
+int
+main()
+{
+	int x, *p, **pp;
+
+	x = 0;
+	p = &x;
+	pp = &p;
+	return **pp;
+}
+:input:
+:output:
+:output:
+:testcase:
+
+:testcase:
+:name: c-testsuite - #00021
+:is_system:
+:input:
+int
+foo(int a, int b)
+{
+	return 2 + a - b;
+}
+
+int
+main()
+{
+	return foo(1, 3);
+}
+:input:
+:output:
+:output:
+:testcase:
+
+:testcase:
+:name: c-testsuite - #00026
+:is_system:
+:input:
+int
+main()
+{
+	char *p;
+
+	p = "hello";
+	return p[0] - 104;
+}
+:input:
+:output:
+:output:
+:testcase:
+
+:testcase:
+:name: c-testsuite - #00027
+:is_system:
+:input:
+int
+main()
+{
+	int x;
+
+	x = 1;
+	x = x | 4;
+	return x - 5;
+}
+:input:
+:output:
+:output:
+:testcase:
+
+:testcase:
+:name: c-testsuite - #00028
+:is_system:
+:input:
+int
+main()
+{
+	int x;
+
+	x = 1;
+	x = x & 3;
+	return x - 1;
+}
+:input:
+:output:
+:output:
+:testcase:
+
+:testcase:
+:name: c-testsuite - #00029
+:is_system:
+:input:
+int
+main()
+{
+	int x;
+
+	x = 1;
+	x = x ^ 3;
+	return x - 2;
+}
+:input:
+:output:
+:output:
+:testcase:
+
+:testcase:
+:name: c-testsuite - #00030
+:is_system:
+:input:
+int
+f()
+{
+	return 100;
+}
+
+int
+main()
+{
+	if (f() > 1000)
+		return 1;
+	if (f() >= 1000)
+		return 1;
+	if (1000 < f())
+		return 1;
+	if (1000 <= f())
+		return 1;
+	if (1000 == f())
+		return 1;
+	if (100 != f())
+		return 1;
+	return 0;
+}
+:input:
+:output:
+:output:
+:testcase:
+
+:testcase:
+:name: c-testsuite - #00031
+:is_system:
+:input:
+int
+zero()
+{
+	return 0;
+}
+
+int
+one()
+{
+	return 1;
+}
+
+int
+main()
+{
+	int x;
+	int y;
+
+	x = zero();
+	y = ++x;
+	if (x != 1)
+		return 1;
+	if (y != 1)
+		return 1;
+
+	x = one();
+	y = --x;
+	if (x != 0)
+		return 1;
+	if (y != 0)
+		return 1;
+
+	x = zero();
+	y = x++;
+	if (x != 1)
+		return 1;
+	if (y != 0)
+		return 1;
+
+	x = one();
+	y = x--;
+	if (x != 0)
+		return 1;
+	if (y != 1)
+		return 1;
+
+	return 0;
+}
+:input:
+:output:
+:output:
+:testcase:
+
+:testcase:
+:name: c-testsuite - #00034
+:is_system:
+:input:
+int
+main()
+{
+	int x;
+
+	x = 0;
+	while(1)
+		break;
+	while(1) {
+		if (x == 5) {
+			break;
+		}
+		x = x + 1;
+		continue;
+	}
+	for (;;) {
+		if (x == 10) {
+			break;
+		}
+		x = x + 1;
+		continue;
+	}
+	do {
+		if (x == 15) {
+			break;
+		}
+		x = x + 1;
+		continue;
+	} while(1);
+	return x - 15;
+}
+:input:
+:output:
+:output:
+:testcase:
+
+:testcase:
+:name: c-testsuite - #00035
+:is_system:
+:input:
+int
+main()
+{
+	int x;
+
+	x = 4;
+	if(!x != 0)
+		return 1;
+	if(!!x != 1)
+		return 1;
+	if(-x != 0 - 4)
+		return 1;
+	return 0;
+}
+:input:
+:output:
+:output:
+:testcase:
+
+:testcase:
+:name: c-testsuite - #00036
+:is_system:
+:input:
+int
+main()
+{
+	int x;
+
+	x = 0;
+	x += 2;
+	x += 2;
+	if (x != 4)
+		return 1;
+	x -= 1;
+	if (x != 3)
+		return 2;
+	x *= 2;
+	if (x != 6)
+		return 3;
+
+	return 0;
+}
+:input:
+:output:
+:output:
+:testcase:
+
+:testcase:
+:name: c-testsuite - #00041
+:is_system:
+:input:
+int
+main() {
+	int n;
+	int t;
+	int c;
+	int p;
+
+	c = 0;
+	n = 2;
+	while (n < 5000) {
+		t = 2;
+		p = 1;
+		while (t*t <= n) {
+			if (n % t == 0)
+				p = 0;
+			t++;
+		}
+		n++;
+		if (p)
+			c++;
+	}
+	if (c != 669)
+		return 1;
+	return 0;
+}
+:input:
+:output:
+:output:
+:testcase:
